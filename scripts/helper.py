@@ -100,3 +100,41 @@ def plotter(data, depth_col, num_col=None, cat_col=None, cat_classes=None, figsi
         ax[i+1].set_yticklabels([])
     
     plt.show()
+    
+import numpy as np
+
+
+def auto_detect_facies_2(density, acoustic, PE, normalized=True):
+    
+    # normalizer
+    def normalizer(x, xmin, xmax, scale='cart'):
+        # layer for logscale
+        if scale == 'log':
+            x, xmin, xmax = map(log10, [x, xmin, xmax])
+        # normalization
+        norm_val = (x - xmin) / (xmax - xmin)
+        return norm_val
+    
+    if normalized:
+        density = normalizer(density, 1.95, 2.95)
+        acoustic = normalizer(acoustic, 40, 140)
+        PE = normalizer(PE, 0, 10)
+        coord1 = np.asarray([density, acoustic, PE])
+        facies_dict = {
+            'SS' : [normalizer(2.65, 1.95, 2.95), normalizer(53  , 40, 140), normalizer(1.81, 0, 10)],
+            'LS' : [normalizer(2.71, 1.95, 2.95), normalizer(47.5, 40, 140), normalizer(5.08, 0, 10)],
+        }
+    else:
+        coord1 = np.asarray([density, acoustic, PE])
+        facies_dict = {
+            'SS' : [2.65, 53  , 1.81],
+            'LS' : [2.71, 47.5, 5.08],
+        }
+    
+    # calculate distance
+    dist = {}
+    for key,val in facies_dict.items():
+        coord2 = np.asarray(val)
+        dist[key] = np.linalg.norm(coord1 - coord2)
+        
+    return min(dist, key=dist.get)
