@@ -1,6 +1,6 @@
 # FE
 
-> My stylish Nuxt.js project
+> MVP for well-top formation helper
 
 ## Build Setup
 
