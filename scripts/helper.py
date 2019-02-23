@@ -1,12 +1,13 @@
 import numpy as np
 
-def auto_detect_facies(density, acoustic, PE):
+def auto_detect_facies(gamma_ray, density, acoustic, PE):
     """
     Simple euclidean nearest neighbour to auto detect facies given logs.
 
     Parameters
     ----------
-
+    gamma_ray: float
+        Gamma ray response.
     density : float
       Density log response.
     acoustic : float
@@ -21,19 +22,19 @@ def auto_detect_facies(density, acoustic, PE):
     """
   
     # wrap into coordinate
-    coord = np.asarray([density, acoustic, PE])
+    coord = np.asarray([gamma_ray, density, acoustic, PE])
     
     if np.isnan(coord).sum() != 0:
-        return np.nan
+        return 'NO FACIES'
 
     # facies dictionary
     facies_dict = {
-      'SS' : [2.65, 53, 1.81],
-      'LS' : [2.71, 47.5, 5.08],
-      'SH' : [2.5, 100, 3],
-      'DL' : [2.87, 43, 3.14],
-      'AN' : [2.98, 50, 5.06],
-      'SL' : [2.03, 67, 4.65],
+      'SS' : [80, 2.65, 53, 1.81],
+      'LS' : [80, 2.71, 47.5, 5.08],
+      'SH' : [100, 2.5, 100, 3],
+      'DL' : [80, 2.87, 43, 3.14],
+      'AN' : [80, 2.98, 50, 5.06],
+      'SL' : [90, 2.03, 67, 4.65],
     }
 
     distances = {}
