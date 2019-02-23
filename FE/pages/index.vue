@@ -1,7 +1,10 @@
 <template>
   <section class="container">
     <el-container direction="vertical">
-      <div>Automatic Selection Top Formation Module</div>
+      <div>
+        <h4>Automatic Selection Top Formation Module</h4>
+        <img src="~/assets/logo2.png" width="150px" height="40px">
+      </div>
       <el-main>
         <el-container direction="horizontal" height="29%" id="top">
           <el-container direction="vertical">
