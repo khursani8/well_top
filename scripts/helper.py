@@ -138,3 +138,102 @@ def auto_detect_facies_2(density, acoustic, PE, normalized=True):
         dist[key] = np.linalg.norm(coord1 - coord2)
         
     return min(dist, key=dist.get)
+
+
+import matplotlib.pyplot as plt
+import matplotlib.colors as colors
+from mpl_toolkits.axes_grid1 import make_axes_locatable
+
+def plotter2(data, depthcol, grcol, resscol, resmcol, resdcol, neutcol, dencol, dtccol, ycol, yhatcol):
+    
+    # do not change figsize
+    figsize=(12, 10)
+    
+    # configure chart
+    fig, ax = plt.subplots(nrows=1, ncols=6, figsize=figsize)
+    
+    # depth
+    depth = data.iloc[:, depthcol].values
+    ztrim = min(depth), max(depth)
+    
+    # GR
+    GR = data.iloc[:, grcol].values
+    ax[0].plot(GR, depth, color='red')
+    ax[0].set_xlabel('GR', color='red')
+    ax[0].set_xlim(0, 180)
+    ax[0].set_ylim(*ztrim)
+    ax[0].invert_yaxis()
+    ax[0].xaxis.tick_top()
+    ax[0].xaxis.set_label_position('top')
+    
+    # Resistivity
+    ress = data.iloc[:, resscol].values
+    resm = data.iloc[:, resmcol].values
+    resd = data.iloc[:, resdcol].values
+    ax[1].plot(ress, depth, color='green')
+    ax[1].plot(resm, depth, color='black')
+    ax[1].plot(resd, depth, color='red')
+    ax[1].set_yticks([])
+    ax[1].set_xlabel('Resistivity', color='black')
+    ax[1].set_xlim(0.2, 2000)
+    ax[1].set_ylim(*ztrim)
+    ax[1].set_xscale('log')
+    ax[1].invert_yaxis()
+    ax[1].xaxis.tick_top()
+    ax[1].xaxis.set_label_position('top')
+    
+    # ND
+    neutron = data.iloc[:, neutcol].values
+    density = data.iloc[:, dencol].values
+    axn = ax[2].twiny()
+    axn.set_xlim(0.45, -0.15)
+    axn.plot(neutron, depth, color='blue')
+    axd = ax[2].twiny()
+    axd.set_xlim(1.95, 2.95)
+    axd.plot(density, depth, color='red')
+    axd.invert_xaxis()
+    ax[2].set_ylim(*ztrim)
+    ax[2].set_yticks([])
+    ax[2].set_xticks([])
+    ax[2].set_xlabel('Neutron-Density')
+    ax[2].xaxis.set_label_position('top')
+    
+    # DTC
+    dtc = data.iloc[:, dtccol].values
+    ax[3].plot(dtc, depth, color='black')
+    ax[3].set_yticks([])
+    ax[3].set_xlabel('DTC', color='black')
+    ax[3].set_xlim(140, 40)
+    ax[3].set_ylim(*ztrim)
+    ax[3].invert_yaxis()
+    ax[3].xaxis.tick_top()
+    ax[3].xaxis.set_label_position('top')
+    
+    # facies color map
+    facies_colors = ['#013220','#F1C40F','#85C1E9','#F2F3F4']
+    facies_labels = ['Shale','Sandstone','Limestone','NotAvailable']
+    cmap = colors.ListedColormap(facies_colors, 'indexed')
+    
+    # Actual litho
+    actual = data.iloc[:, ycol].values
+    actual_raster_array = np.column_stack((actual, actual)).astype('float')
+    ax[4].imshow(X=actual_raster_array, interpolation=None, aspect='auto', cmap=cmap, vmin=1, vmax=4)
+    ax[4].set_yticks([])
+    ax[4].set_xlabel('lithology', color='black')
+    ax[4].xaxis.set_label_position('top')
+    
+    # Predicted litho
+    # prediction
+    predicted = data.iloc[:, yhatcol].values
+    predicted_rater_array = np.column_stack((actual, actual)).astype('float')
+    im=ax[5].imshow(X=predicted_rater_array, interpolation=None, aspect='auto', cmap=cmap, vmin=1, vmax=4)
+    divider = make_axes_locatable(ax[5])
+    cax = divider.append_axes('right', size='20%', pad=0.05)
+    cbar = plt.colorbar(im, cax=cax)
+    cbar.set_label((27*' ').join(['  Shale  ','Sandstone','Limestone',' NotAvail']))
+    cbar.set_ticks(range(0,1)); cbar.set_ticklabels('')
+    ax[5].set_yticks([])
+    ax[5].set_xlabel('predicted', color='black')
+    ax[5].xaxis.set_label_position('top')
+    
+    plt.show()

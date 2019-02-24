@@ -106,13 +106,16 @@ export default {
     )
   },
   methods: {
-    generate() {
+    async generate() {
       const payload = {
-        files: this.files.filter(el => this.checkList.includes(el.well)),
+        files: this.files.filter(el => btoa(this.checkList.includes(el.well))),
         GR_CUTOFF: this.GR_CUTOFF
       }
-      this.$axios.post('/endpoint', payload)
-      debugger
+      const data = await this.$axios({
+        method: 'post',
+        url: '/endpoint',
+        data: JSON.stringify(payload)
+      })
     },
     handleChange(file, fileList) {
       const f = file.raw
