@@ -26,7 +26,7 @@ def parse_request():
         cutoff = msg['GR_CUTOFF']
         files = msg['files']
         print(f'cutoff:{cutoff}, totalWell:{len(files)}')
-        path_to_png = "data/mockuplog.jpeg"
+        path_to_png = "data/mockuplog2.png"
         # model do something and generate image
         with open(path_to_png, 'rb') as f:
             binary_file = f.read()
