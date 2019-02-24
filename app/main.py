@@ -1,6 +1,5 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request, json
 app = Flask(__name__)
-
 
 @app.route("/")
 def home():
@@ -11,6 +10,19 @@ def home():
 def salvador():
     return "Hello, Salvador"
 
+@app.route('/upload_file', methods=['GET', 'POST'])
+epp = Flask(__name__)
+def parse_request():
+    if request.method == 'POST':
+        # force = True to ignore data type checks
+        msg = request.get_json(force=False)
+        return('POST msg received!\n')
+        
+        # TODO: Parse file
+        # TODO: Push file into classifier
+    elif request.method == 'GET':
+        return('Hello there! GET received! \n')
+
 
 @app.route("/about")
 def about():
@@ -18,4 +30,5 @@ def about():
 
 
 if __name__ == "__main__":
+    # TODO: Load models
     app.run(debug=True)
