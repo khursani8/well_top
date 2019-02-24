@@ -2,8 +2,9 @@
   <section class="container">
     <el-container direction="vertical">
       <div>
-        <h4>Automatic Selection Top Formation Module</h4>
-        <img src="~/assets/logo2.png" width="150px" height="40px">
+        <img src="~/assets/logo.jpeg" width="150px" height="100px">
+        <span>Automatic Selection Top Formation Module</span>
+        <img src="~/assets/logo2.png" width="200px" height="80px">
       </div>
       <el-main>
         <el-container direction="horizontal" height="29%" id="top">
