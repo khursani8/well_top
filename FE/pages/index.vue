@@ -2,8 +2,9 @@
   <section class="container">
     <el-container direction="vertical">
       <div>
-        <h4>Automatic Selection Top Formation Module</h4>
-        <img src="~/assets/logo2.png" width="150px" height="40px">
+        <img src="~/assets/logo.jpeg" width="150px" height="100px">
+        <span>Automatic Selection Top Formation Module</span>
+        <img src="~/assets/logo2.png" width="200px" height="80px">
       </div>
       <el-main>
         <el-container direction="horizontal" height="29%" id="top">
@@ -106,13 +107,16 @@ export default {
     )
   },
   methods: {
-    generate() {
+    async generate() {
       const payload = {
-        files: this.files.filter(el => this.checkList.includes(el.well)),
+        files: this.files.filter(el => btoa(this.checkList.includes(el.well))),
         GR_CUTOFF: this.GR_CUTOFF
       }
-      this.$axios.post('/endpoint', payload)
-      debugger
+      const data = await this.$axios({
+        method: 'post',
+        url: '/endpoint',
+        data: JSON.stringify(payload)
+      })
     },
     handleChange(file, fileList) {
       const f = file.raw
