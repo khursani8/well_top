@@ -1,4 +1,6 @@
 from flask import Flask, render_template, request, json
+from flask import jsonify
+from base64 import b64encode
 from flask_cors import CORS, cross_origin
 app = Flask(__name__)
 CORS(app)
@@ -24,11 +26,12 @@ def parse_request():
         cutoff = msg['GR_CUTOFF']
         files = msg['files']
         print(f'cutoff:{cutoff}, totalWell:{len(files)}')
-
+        path_to_png = "data/mockuplog.jpeg"
         # model do something and generate image
-        with f as open(path_to_png, 'rb'):
+        with open(path_to_png, 'rb') as f:
             binary_file = f.read()
-        return('POST msg received!\n')
+        return b64encode(binary_file)
+        # return('POST msg received!\n')
 
         # TODO: Parse file
         # TODO: Push file into classifier

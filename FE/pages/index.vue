@@ -62,7 +62,10 @@
               </el-checkbox>
             </el-tooltip>
           </div>
-          <el-main id="correlation">Correlation Panel</el-main>
+          <el-main id="correlation">
+            <div>Correlation Panel</div>
+            <img :src="`data:image/jpeg;base64,${image}`" alt>
+          </el-main>
           <input id="button" type="button" value="FULL" @click="full">
         </el-container>
       </el-main>
@@ -76,6 +79,7 @@ export default {
   components: {},
   data() {
     return {
+      image: '',
       cutOff: 120,
       triggerReRender: Math.random(),
       files: [],
@@ -120,6 +124,8 @@ export default {
         },
         data: JSON.stringify(payload)
       })
+      this.image = data.data
+      debugger
     },
     handleChange(file, fileList) {
       const f = file.raw
