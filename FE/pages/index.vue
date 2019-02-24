@@ -62,7 +62,10 @@
               </el-checkbox>
             </el-tooltip>
           </div>
-          <el-main id="correlation">Correlation Panel</el-main>
+          <el-main id="correlation">
+            <div>Correlation Panel</div>
+            <img :src="`data:image/jpeg;base64,${image}`" alt>
+          </el-main>
           <input id="button" type="button" value="FULL" @click="full">
         </el-container>
       </el-main>
@@ -76,6 +79,7 @@ export default {
   components: {},
   data() {
     return {
+      image: '',
       cutOff: 120,
       triggerReRender: Math.random(),
       files: [],
@@ -109,14 +113,19 @@ export default {
   methods: {
     async generate() {
       const payload = {
-        files: this.files.filter(el => btoa(this.checkList.includes(el.well))),
-        GR_CUTOFF: this.GR_CUTOFF
+        files: this.files.filter(el => this.checkList.includes(el.well)),
+        GR_CUTOFF: this.cutOff
       }
       const data = await this.$axios({
         method: 'post',
-        url: '/endpoint',
+        url: 'http://localhost:5000/endpoint',
+        headers: {
+          'Content-Type': 'application/json'
+        },
         data: JSON.stringify(payload)
       })
+      this.image = data.data
+      debugger
     },
     handleChange(file, fileList) {
       const f = file.raw

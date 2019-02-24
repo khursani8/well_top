@@ -1,5 +1,10 @@
 from flask import Flask, render_template, request, json
+from flask import jsonify
+from base64 import b64encode
+from flask_cors import CORS, cross_origin
 app = Flask(__name__)
+CORS(app)
+
 
 @app.route("/")
 def home():
@@ -10,14 +15,24 @@ def home():
 def salvador():
     return "Hello, Salvador"
 
-@app.route('/upload_file', methods=['GET', 'POST'])
-epp = Flask(__name__)
+
+@app.route('/endpoint', methods=['GET', 'POST'])
 def parse_request():
     if request.method == 'POST':
         # force = True to ignore data type checks
         msg = request.get_json(force=False)
-        return('POST msg received!\n')
-        
+        print(type(msg))
+        print(msg.keys())
+        cutoff = msg['GR_CUTOFF']
+        files = msg['files']
+        print(f'cutoff:{cutoff}, totalWell:{len(files)}')
+        path_to_png = "data/mockuplog.jpeg"
+        # model do something and generate image
+        with open(path_to_png, 'rb') as f:
+            binary_file = f.read()
+        return b64encode(binary_file)
+        # return('POST msg received!\n')
+
         # TODO: Parse file
         # TODO: Push file into classifier
     elif request.method == 'GET':
@@ -31,4 +46,4 @@ def about():
 
 if __name__ == "__main__":
     # TODO: Load models
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0', port=5000)
