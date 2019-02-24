@@ -109,12 +109,15 @@ export default {
   methods: {
     async generate() {
       const payload = {
-        files: this.files.filter(el => btoa(this.checkList.includes(el.well))),
-        GR_CUTOFF: this.GR_CUTOFF
+        files: this.files.filter(el => this.checkList.includes(el.well)),
+        GR_CUTOFF: this.cutOff
       }
       const data = await this.$axios({
         method: 'post',
-        url: '/endpoint',
+        url: 'http://localhost:5000/endpoint',
+        headers: {
+          'Content-Type': 'application/json'
+        },
         data: JSON.stringify(payload)
       })
     },
